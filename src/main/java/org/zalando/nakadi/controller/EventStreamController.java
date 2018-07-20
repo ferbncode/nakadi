@@ -242,13 +242,6 @@ public class EventStreamController {
                         .withMaxMemoryUsageBytes(maxMemoryUsageBytes)
                         .build();
 
-                // acquire connection slots to limit the number of simultaneous connections from one client
-                final List<String> partitions = streamConfig.getCursors().stream()
-                        .map(NakadiCursor::getPartition)
-                        .collect(Collectors.toList());
-                connectionSlots = consumerLimitingService.acquireConnectionSlots(
-                        client.getClientId(), eventTypeName, partitions);
-
                 consumerCounter = metricRegistry.counter(metricNameFor(eventTypeName, CONSUMERS_COUNT_METRIC_NAME));
                 consumerCounter.inc();
 
